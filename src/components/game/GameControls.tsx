@@ -36,11 +36,28 @@ export default function GameControls() {
                 dropColumn
             );
 
+            console.log(result.path);
+            console.log(
+                "PATH",
+                result.path
+            );
+
+            console.log(
+                "PATH LENGTH",
+                result.path.length
+            );
+
+            console.log(
+                "BIN",
+                result.binIndex
+            );
+
             setRoundData({
                 pegMapHash: result.pegMapHash,
                 binIndex: result.binIndex,
                 multiplier: result.payoutMultiplier,
                 path: result.path,
+                isAnimating: true
             });
         } catch (error) {
             console.error(error);

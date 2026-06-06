@@ -1,7 +1,7 @@
 import GameControls from "@/components/game/GameControls";
 import KeyboardControls from "@/components/game/KeyboardControls";
 import PayTable from "@/components/game/PayTable";
-import PlinkoBoard from "@/components/game/Plinkboard";
+import Plinkoboard from "@/components/game/Plinkboard";
 import RoundInfo from "@/components/game/RoundInfo";
 
 export default function Home() {
@@ -26,7 +26,7 @@ export default function Home() {
 
       <GameControls />
 
-      <PlinkoBoard />
+      <Plinkoboard />
 
       <PayTable />
 
