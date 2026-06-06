@@ -12,6 +12,8 @@ interface GameStore {
     path: ("L" | "R")[];
     isAnimating: boolean;
     isMuted: boolean;
+    serverSeed: string | null;
+    nonce: string | null;
 
     setMuted: (value: boolean) => void;
     setDropColumn: (value: number) => void;
@@ -34,6 +36,9 @@ export const useGameStore = create<GameStore>(
         multiplier: null,
         path: [],
         isMuted: false,
+        serverSeed: null,
+        nonce: null,
+
 
         setMuted: value => set({ isMuted: value }),
         setDropColumn: value => set({ dropColumn: value }),
