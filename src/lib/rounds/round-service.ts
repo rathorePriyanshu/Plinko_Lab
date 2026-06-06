@@ -105,3 +105,37 @@ export async function startRound(
         payoutMultiplier,
     };
 }
+
+export async function revealRound(
+    roundId: string
+) {
+    const round =
+        await prisma.round.findUnique({
+            where: {
+                id: roundId,
+            },
+        });
+
+    if (!round) {
+        throw new Error(
+            "Round not found"
+        );
+    }
+
+    const updatedRound =
+        await prisma.round.update({
+            where: {
+                id: roundId,
+            },
+            data: {
+                status: "REVEALED",
+                revealedAt: new Date(),
+            },
+        });
+
+    return {
+        roundId: updatedRound.id,
+        serverSeed: updatedRound.serverSeed,
+        revealedAt: updatedRound.revealedAt,
+    };
+}
