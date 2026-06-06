@@ -167,3 +167,19 @@ export function verifyRound(
         binIndex: result.binIndex,
     };
 }
+
+export async function getRound(roundId: string) {
+    const round = await prisma.round.findUnique({
+        where: {
+            id: roundId,
+        },
+    });
+
+    if (!round) {
+        throw new Error(
+            "Round not found"
+        );
+    }
+
+    return round;
+}
