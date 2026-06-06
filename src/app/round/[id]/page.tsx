@@ -1,12 +1,20 @@
-import { getRound } from "@/lib/rounds/round-service";
 import { notFound } from "next/navigation";
+
+import {
+    getRound,
+} from "@/lib/rounds/round-service";
+
+import RoundReplay
+    from "@/components/history/RoundReplay";
+
+import Link
+    from "next/link";
 
 interface Props {
     params: Promise<{
         id: string;
     }>;
 }
-
 
 export default async function RoundPage({
     params,
@@ -22,23 +30,60 @@ export default async function RoundPage({
         notFound();
     }
 
+    const path =
+        round.pathJson
+            ? JSON.parse(
+                round.pathJson
+            )
+            : [];
+
+    const verifyUrl =
+        round.status === "REVEALED"
+            ? `/verify?serverSeed=${round.serverSeed}&clientSeed=${round.clientSeed}&nonce=${round.nonce}&dropColumn=${round.dropColumn}&roundId=${round.id}`
+            : null;
+
     return (
         <main
             className="
                 mx-auto
-                max-w-5xl
+                max-w-6xl
                 p-6
             "
         >
-            <h1
+            <div
                 className="
                     mb-8
-                    text-4xl
-                    font-bold
+                    flex
+                    items-center
+                    justify-between
                 "
             >
-                Round Details
-            </h1>
+                <h1
+                    className="
+                        text-4xl
+                        font-bold
+                    "
+                >
+                    Round Details
+                </h1>
+
+                {
+                    verifyUrl && (
+                        <Link
+                            href={verifyUrl}
+                            className="
+                                rounded
+                                bg-green-600
+                                px-4
+                                py-2
+                                text-white
+                            "
+                        >
+                            Verify Round
+                        </Link>
+                    )
+                }
+            </div>
 
             <div
                 className="
@@ -81,7 +126,20 @@ export default async function RoundPage({
                     <strong>
                         Client Seed:
                     </strong>{" "}
-                    {round.clientSeed}
+                    {
+                        round.clientSeed ??
+                        "-"
+                    }
+                </p>
+
+                <p>
+                    <strong>
+                        Combined Seed:
+                    </strong>{" "}
+                    {
+                        round.combinedSeed ??
+                        "-"
+                    }
                 </p>
 
                 <p>
@@ -92,37 +150,99 @@ export default async function RoundPage({
                         round.status ===
                             "REVEALED"
                             ? round.serverSeed
-                            : "Hidden"
+                            : "Hidden until reveal"
                     }
+                </p>
+
+                <p>
+                    <strong>
+                        Rows:
+                    </strong>{" "}
+                    {round.rows}
                 </p>
 
                 <p>
                     <strong>
                         Drop Column:
                     </strong>{" "}
-                    {round.dropColumn}
+                    {
+                        round.dropColumn ??
+                        "-"
+                    }
                 </p>
 
                 <p>
                     <strong>
                         Peg Map Hash:
                     </strong>{" "}
-                    {round.pegMapHash}
+                    {
+                        round.pegMapHash ??
+                        "-"
+                    }
                 </p>
 
                 <p>
                     <strong>
                         Bin Index:
                     </strong>{" "}
-                    {round.binIndex}
+                    {
+                        round.binIndex ??
+                        "-"
+                    }
+                </p>
+
+                <p>
+                    <strong>
+                        Bet:
+                    </strong>{" "}
+                    ₹
+                    {
+                        round.betCents
+                            ? round.betCents /
+                            100
+                            : 0
+                    }
                 </p>
 
                 <p>
                     <strong>
                         Multiplier:
                     </strong>{" "}
-                    {round.payoutMultiplier}x
+                    {
+                        round.payoutMultiplier ??
+                        "-"
+                    }x
                 </p>
+
+                <p>
+                    <strong>
+                        Created:
+                    </strong>{" "}
+                    {new Date(
+                        round.createdAt
+                    ).toLocaleString()}
+                </p>
+
+                {
+                    round.revealedAt && (
+                        <p>
+                            <strong>
+                                Revealed:
+                            </strong>{" "}
+                            {new Date(
+                                round.revealedAt
+                            ).toLocaleString()}
+                        </p>
+                    )
+                }
+
+            </div>
+
+            <div className="mt-8">
+
+                <RoundReplay
+                    path={path}
+                />
 
             </div>
         </main>
