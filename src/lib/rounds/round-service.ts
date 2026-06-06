@@ -53,6 +53,10 @@ export async function startRound(
         );
     }
 
+    if (round.status !== "CREATED") {
+        throw new Error(`Round is ${round.status}`);
+    }
+
     if (!round.serverSeed) {
         throw new Error(
             "Missing server seed"
@@ -118,6 +122,12 @@ export async function revealRound(
     if (!round) {
         throw new Error(
             "Round not found"
+        );
+    }
+
+    if (round.status !== "STARTED") {
+        throw new Error(
+            `Round is ${round.status}`
         );
     }
 
