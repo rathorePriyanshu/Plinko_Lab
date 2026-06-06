@@ -32,7 +32,7 @@ export default async function HistoryPage() {
     return (
         <main className="min-h-screen bg-zinc-950 text-zinc-100 py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto space-y-8">
-                {/* Header Block */}
+
                 <div className="border-b border-zinc-800 pb-6">
                     <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 bg-clip-text text-transparent">
                         Round History
