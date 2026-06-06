@@ -4,13 +4,12 @@ import { Round } from "@prisma/client";
 
 async function getRounds() {
 
-    const response =
-        await fetch(
-            "http://localhost:3000/api/rounds?limit=20",
-            {
-                cache: "no-store",
-            }
-        );
+    const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SITE_URL}/api/rounds?limit=20`,
+        {
+            cache: "no-store",
+        }
+    );
 
     return response.json();
 }
