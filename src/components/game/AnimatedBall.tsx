@@ -7,7 +7,9 @@ import {
 } from "react";
 
 import Ball from "./Ball";
-
+import {
+    useReducedMotion,
+} from "@/hooks/usereduceMotion";
 import {
     pathToCoordinates,
 } from "@/lib/plinko/path-to-coordinates";
@@ -34,6 +36,8 @@ export default function AnimatedBall({
         useGameStore(
             state => state.path
         );
+    const reducedMotion =
+        useReducedMotion();
 
     const isAnimating =
         useGameStore(
@@ -56,7 +60,11 @@ export default function AnimatedBall({
     const [
         currentIndex,
         setCurrentIndex,
-    ] = useState(0);
+    ] = useState(
+        reducedMotion
+            ? coordinates.length - 1
+            : 0
+    );
 
     useEffect(() => {
 
@@ -64,6 +72,13 @@ export default function AnimatedBall({
             !isAnimating ||
             coordinates.length === 0
         ) {
+            return;
+        }
+
+        if (reducedMotion) {
+
+            onFinish?.();
+
             return;
         }
 

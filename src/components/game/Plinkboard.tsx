@@ -23,6 +23,7 @@ import {
 } from "@/lib/sound/sound-manage";
 
 import {
+    canAnimate,
     fireConfetti,
 } from "@/lib/confetti/confetti";
 
@@ -87,7 +88,9 @@ export default function PlinkoBoard() {
                                     multiplier &&
                                     multiplier > 1
                                 ) {
-                                    fireConfetti();
+                                    if (canAnimate()) {
+                                        fireConfetti();
+                                    }
                                 }
                             }}
                         />

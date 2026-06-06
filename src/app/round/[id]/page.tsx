@@ -7,9 +7,6 @@ import {
 import RoundReplay
     from "@/components/history/RoundReplay";
 
-import Link
-    from "next/link";
-
 interface Props {
     params: Promise<{
         id: string;
@@ -67,22 +64,6 @@ export default async function RoundPage({
                     Round Details
                 </h1>
 
-                {
-                    verifyUrl && (
-                        <Link
-                            href={verifyUrl}
-                            className="
-                                rounded
-                                bg-green-600
-                                px-4
-                                py-2
-                                text-white
-                            "
-                        >
-                            Verify Round
-                        </Link>
-                    )
-                }
             </div>
 
             <div
