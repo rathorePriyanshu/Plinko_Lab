@@ -1,8 +1,8 @@
-import { sha256 } from "@/lib/crypto/hash";
+import { sha256 } from "../crypto/hash";
 import {
     hashToSeed,
     XorShift32,
-} from "@/lib/crypto/prng";
+} from "../crypto/prng";
 
 import {
     generatePegMap,
