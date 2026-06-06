@@ -7,6 +7,7 @@ import Bin from "./Bin";
 import AnimatedBall from "./AnimatedBall";
 
 import { PAYOUTS } from "@/constants/payouts";
+
 import {
     generatePegPositions,
     ROWS,
@@ -54,6 +55,11 @@ export default function PlinkoBoard() {
             state => state.isTilted
         );
 
+    const showDebugGrid =
+        useGameStore(
+            state => state.showDebugGrid
+        );
+
     const BOARD_WIDTH = 700;
 
     const BOARD_HEIGHT =
@@ -67,6 +73,7 @@ export default function PlinkoBoard() {
 
             <div
                 className={`
+                    relative
                     mx-auto
                     transition-all
                     duration-500
@@ -108,6 +115,27 @@ export default function PlinkoBoard() {
                     </div>
                 )}
 
+                {showDebugGrid && (
+                    <div
+                        className="
+                            absolute
+                            left-4
+                            top-4
+                            z-50
+                            rounded
+                            bg-red-500
+                            px-3
+                            py-2
+                            text-sm
+                            font-bold
+                            text-white
+                            shadow-lg
+                        "
+                    >
+                        DEBUG GRID
+                    </div>
+                )}
+
                 <div
                     className="relative"
                     style={{
@@ -140,14 +168,50 @@ export default function PlinkoBoard() {
                             peg,
                             index
                         ) => (
-                            <Peg
+                            <div
                                 key={index}
-                                x={
-                                    peg.x +
-                                    BOARD_CENTER
-                                }
-                                y={peg.y}
-                            />
+                            >
+
+                                <Peg
+                                    x={
+                                        peg.x +
+                                        BOARD_CENTER
+                                    }
+                                    y={peg.y}
+                                />
+
+                                {showDebugGrid && (
+                                    <div
+                                        className="
+                                            absolute
+                                            pointer-events-none
+                                            text-[10px]
+                                            font-bold
+                                            text-red-500
+                                        "
+                                        style={{
+                                            left:
+                                                peg.x +
+                                                BOARD_CENTER +
+                                                10,
+                                            top:
+                                                peg.y -
+                                                10,
+                                        }}
+                                    >
+                                        (
+                                        {Math.round(
+                                            peg.x
+                                        )}
+                                        ,
+                                        {Math.round(
+                                            peg.y
+                                        )}
+                                        )
+                                    </div>
+                                )}
+
+                            </div>
                         )
                     )}
 

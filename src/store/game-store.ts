@@ -17,7 +17,9 @@ interface GameStore {
     revealedAt: string | null;
     verificationStatus: boolean | null;
     isTilted: boolean;
+    showDebugGrid: boolean;
 
+    toggleDebugGrid: () => void;
     toggleTilt: () => void;
     setMuted: (value: boolean) => void;
     setDropColumn: (value: number) => void;
@@ -45,6 +47,7 @@ export const useGameStore = create<GameStore>(
         revealedAt: null,
         verificationStatus: null,
         isTilted: false,
+        showDebugGrid: false,
 
         toggleTilt: () => set(state => ({ isTilted: !state.isTilted, })),
         setMuted: value => set({ isMuted: value }),
@@ -53,4 +56,5 @@ export const useGameStore = create<GameStore>(
         setClientSeed: value => set({ clientSeed: value }),
         setRoundData: data => set(data),
         setAnimating: value => set({ isAnimating: value, }),
+        toggleDebugGrid: () => set(state => ({ showDebugGrid: !state.showDebugGrid })),
     }));

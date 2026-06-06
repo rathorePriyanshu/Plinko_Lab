@@ -1,3 +1,4 @@
+import DebugGridListener from "@/components/game/DebugGridListener";
 import GameControls from "@/components/game/GameControls";
 import KeyboardControls from "@/components/game/KeyboardControls";
 import MuteButton from "@/components/game/MuteButton";
@@ -29,6 +30,8 @@ export default function Home() {
       <GameControls />
 
       <TiltListener />
+
+      <DebugGridListener />
 
       <div
         className="
