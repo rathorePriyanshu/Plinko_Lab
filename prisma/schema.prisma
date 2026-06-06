@@ -7,41 +7,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Round {
+  id               String      @id @default(cuid())
+  createdAt        DateTime    @default(now())
+  revealedAt       DateTime?
+  status           RoundStatus @default(CREATED)
+  nonce            String
+  commitHex        String
+  serverSeed       String?
+  clientSeed       String?
+  combinedSeed     String?
+  pegMapHash       String?
+  rows             Int         @default(12)
+  dropColumn       Int?
+  binIndex         Int?
+  payoutMultiplier Float?
+  betCents         Int?
+  pathJson         String?
+}
+
 enum RoundStatus {
   CREATED
   STARTED
   REVEALED
-}
-
-model Round {
-  id String @id @default(cuid())
-
-  createdAt DateTime @default(now())
-  revealedAt DateTime?
-
-  status RoundStatus @default(CREATED)
-
-  nonce String
-
-  commitHex String
-
-  serverSeed String?
-
-  clientSeed String?
-
-  combinedSeed String?
-
-  pegMapHash String?
-
-  rows Int @default(12)
-
-  dropColumn Int?
-
-  binIndex Int?
-
-  payoutMultiplier Float?
-
-  betCents Int?
-
-  pathJson String?
 }
