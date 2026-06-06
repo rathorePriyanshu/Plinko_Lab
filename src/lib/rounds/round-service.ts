@@ -183,3 +183,14 @@ export async function getRound(roundId: string) {
 
     return round;
 }
+
+export async function getRecentRounds(
+    limit = 20
+) {
+    return prisma.round.findMany({
+        orderBy: {
+            createdAt: "desc",
+        },
+        take: limit,
+    });
+}
