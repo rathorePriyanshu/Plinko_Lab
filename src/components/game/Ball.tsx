@@ -27,8 +27,9 @@ export default function Ball({
                 h-5
                 w-5
                 rounded-full
-                bg-yellow-400
-                shadow-lg
+                bg-gradient-to-br from-yellow-300 via-amber-400 to-amber-500
+                shadow-[0_0_12px_rgba(245,158,11,0.6)]
+                border border-yellow-300/40
             "
         />
     );

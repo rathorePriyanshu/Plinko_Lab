@@ -29,15 +29,28 @@ export default function OpenVerifierButton() {
         <Link
             href={`/verify?${params}`}
             className="
-                inline-block
-                rounded
-                bg-blue-600
-                px-4
-                py-2
+                w-full
+                h-11
+                rounded-xl
+                bg-amber-600
+                hover:bg-amber-500
+                active:scale-95
                 text-white
+                font-bold
+                text-xs
+                tracking-wider
+                uppercase
+                shadow-lg
+                shadow-amber-950/20
+                transition-all
+                cursor-pointer
+                flex
+                items-center
+                justify-center
+                text-center
             "
         >
-            Verify This Round
+            Verify Round
         </Link>
     );
 }

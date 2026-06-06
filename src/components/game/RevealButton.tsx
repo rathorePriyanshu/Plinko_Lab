@@ -45,18 +45,32 @@ export default function RevealButton() {
                 !!serverSeed
             }
             className="
-                rounded
-                bg-green-600
-                px-4
-                py-2
+                w-full
+                h-11
+                rounded-xl
+                bg-emerald-600
+                hover:bg-emerald-500
+                active:scale-95
                 text-white
-                disabled:opacity-50
+                font-bold
+                text-xs
+                tracking-wider
+                uppercase
+                shadow-lg
+                shadow-emerald-950/20
+                transition-all
+                disabled:opacity-40
+                disabled:pointer-events-none
+                cursor-pointer
+                flex
+                items-center
+                justify-center
             "
         >
             {
                 serverSeed
                     ? "REVEALED"
-                    : "Reveal Server Seed"
+                    : "Reveal Seed"
             }
         </button>
     );

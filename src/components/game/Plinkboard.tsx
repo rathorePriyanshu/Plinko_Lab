@@ -60,6 +60,16 @@ export default function PlinkoBoard() {
             state => state.showDebugGrid
         );
 
+    const isAnimating =
+        useGameStore(
+            state => state.isAnimating
+        );
+
+    const dropColumn =
+        useGameStore(
+            state => state.dropColumn
+        );
+
     const BOARD_WIDTH = 700;
 
     const BOARD_HEIGHT =
@@ -69,7 +79,7 @@ export default function PlinkoBoard() {
         BOARD_WIDTH / 2;
 
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto w-full py-4 scrollbar-none flex justify-center">
 
             <div
                 className={`
@@ -78,6 +88,7 @@ export default function PlinkoBoard() {
                     transition-all
                     duration-500
                     ease-in-out
+                    pt-8
                     ${isTilted
                         ? `
                                 rotate-[5deg]
@@ -94,14 +105,27 @@ export default function PlinkoBoard() {
                 }}
             >
 
+                {/* Drop Indicator */}
+                <div
+                    className="absolute top-0 -translate-x-1/2 flex flex-col items-center transition-all duration-200 ease-out z-10"
+                    style={{
+                        left: BOARD_CENTER + (dropColumn - 6) * H_SPACING,
+                    }}
+                >
+                    <div className="text-[9px] font-extrabold text-yellow-500 uppercase tracking-widest mb-1 bg-yellow-500/10 border border-yellow-500/30 px-1.5 py-0.5 rounded backdrop-blur-sm">
+                        Col {dropColumn}
+                    </div>
+                    <div className="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[7px] border-t-yellow-500 drop-shadow-[0_2px_4px_rgba(234,179,8,0.5)] animate-bounce" />
+                </div>
+
                 {isTilted && (
                     <div
                         className="
                             absolute
                             right-4
-                            top-4
+                            top-8
                             z-50
-                            rounded
+                            rounded-lg
                             bg-yellow-500
                             px-3
                             py-2
@@ -120,9 +144,9 @@ export default function PlinkoBoard() {
                         className="
                             absolute
                             left-4
-                            top-4
+                            top-8
                             z-50
-                            rounded
+                            rounded-lg
                             bg-red-500
                             px-3
                             py-2
@@ -246,7 +270,7 @@ export default function PlinkoBoard() {
                                     index={index}
                                     multiplier={payout}
                                     selected={
-                                        binIndex === index
+                                        binIndex === index && !isAnimating
                                     }
                                 />
                             </div>
