@@ -5,7 +5,7 @@ export async function POST() {
         const round = await createRound();
 
         return Response.json(round);
-    } catch (error) {
+    } catch {
         return Response.json(
             {
                 error: "Failed to create round",

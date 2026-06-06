@@ -1,5 +1,6 @@
 import HistoryTable
     from "@/components/history/HistoryTable";
+import { Round } from "@prisma/client";
 
 async function getRounds() {
 
@@ -20,7 +21,7 @@ export default async function HistoryPage() {
         await getRounds();
     const formattedRounds =
         rounds.map(
-            (round: any) => ({
+            (round: Round) => ({
                 ...round,
                 createdAt:
                     new Date(

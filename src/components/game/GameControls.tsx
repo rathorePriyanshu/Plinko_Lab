@@ -212,13 +212,12 @@ export default function GameControls() {
                 <div className="pt-2 border-t border-zinc-800/40 flex items-center justify-between">
                     <div>
                         <span className="text-sm text-zinc-300 block">Tilt Mode</span>
-                        <span className="text-xs text-zinc-500">Press 'T' to trigger</span>
+                        <span className="text-xs text-zinc-500">Press &apos;T&apos; to trigger</span>
                     </div>
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide border transition-all ${
-                        isTilted
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide border transition-all ${isTilted
                             ? "bg-amber-500/10 text-amber-400 border-amber-500/30 animate-pulse"
                             : "bg-zinc-950 text-zinc-500 border-zinc-800"
-                    }`}>
+                        }`}>
                         {isTilted ? "Tilted" : "Normal"}
                     </span>
                 </div>
@@ -226,13 +225,12 @@ export default function GameControls() {
                 <div className="pt-2 border-t border-zinc-800/40 flex items-center justify-between">
                     <div>
                         <span className="text-sm text-zinc-300 block">Debug Grid</span>
-                        <span className="text-xs text-zinc-500">Press 'G' to trigger</span>
+                        <span className="text-xs text-zinc-500">Press &apos;G&apos; to trigger</span>
                     </div>
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide border transition-all ${
-                        showDebugGrid
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold tracking-wide border transition-all ${showDebugGrid
                             ? "bg-red-500/10 text-red-400 border-red-500/30"
                             : "bg-zinc-950 text-zinc-500 border-zinc-800"
-                    }`}>
+                        }`}>
                         {showDebugGrid ? "Visible" : "Hidden"}
                     </span>
                 </div>

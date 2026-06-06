@@ -39,7 +39,7 @@ export async function POST(request: Request, { params }: {
         return Response.json(
             result
         );
-    } catch (error) {
+    } catch {
         return Response.json(
             {
                 error:

@@ -11,7 +11,7 @@ export default function VerifyPage() {
                         Verify Round
                     </h1>
                     <p className="text-sm text-zinc-400 mt-1">
-                        Verify the integrity of a round's physics calculations.
+                        Verify the integrity of a round&apos;s physics calculations.
                     </p>
                 </div>
                 <Suspense fallback={

@@ -57,6 +57,7 @@ export default function AnimatedBall({ onPegHit, onFinish }: Props) {
     }, [
         coordinates,
         isAnimating,
+        reducedMotion,
         onPegHit,
         onFinish,
         setAnimating,
