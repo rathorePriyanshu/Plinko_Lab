@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { generateServerSeed, generateNonce, createCommit } from "@/lib/engine/verifier";
+import { generateServerSeed, generateNonce, createCommit, createCombinedSeed } from "@/lib/engine/verifier";
 import { PAYOUTS } from "@/constants/payouts";
-import { createCombinedSeed } from "@/lib/engine/verifier";
 import { runPlinkoEngine } from "@/lib/engine/plinko-engine";
 
 export async function createRound() {
@@ -137,5 +136,24 @@ export async function revealRound(
         roundId: updatedRound.id,
         serverSeed: updatedRound.serverSeed,
         revealedAt: updatedRound.revealedAt,
+    };
+}
+
+export function verifyRound(
+    serverSeed: string,
+    clientSeed: string,
+    nonce: string,
+    dropColumn: number,
+    rows = 12
+) {
+    const commitHex = createCommit(serverSeed, nonce);
+    const combinedSeed = createCombinedSeed(serverSeed, clientSeed, nonce);
+    const result = runPlinkoEngine(combinedSeed, rows, dropColumn);
+
+    return {
+        commitHex,
+        combinedSeed,
+        pegMapHash: result.pegMapHash,
+        binIndex: result.binIndex,
     };
 }
