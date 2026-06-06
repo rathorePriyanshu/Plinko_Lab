@@ -1,13 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { useGameStore } from "@/store/game-store";
+
+import {
+    useGameStore,
+} from "@/store/game-store";
+
+import VerificationResult from "./Verificationresult";
 
 interface VerifyResult {
     commitHex: string;
     combinedSeed: string;
     pegMapHash: string;
     binIndex: number;
+    path: ("L" | "R")[];
+    verified: boolean;
 }
 
 export default function VerifyForm() {
@@ -23,12 +30,16 @@ export default function VerifyForm() {
     const [
         localServerSeed,
         setLocalServerSeed,
-    ] = useState(serverSeed ?? "");
+    ] = useState(
+        serverSeed ?? ""
+    );
 
     const [
         localNonce,
         setLocalNonce,
-    ] = useState(nonce ?? "");
+    ] = useState(
+        nonce ?? ""
+    );
 
     const [
         result,
@@ -52,17 +63,26 @@ export default function VerifyForm() {
         try {
 
             setLoading(true);
+
             setError("");
 
             const params =
                 new URLSearchParams({
                     serverSeed:
                         localServerSeed,
+
                     clientSeed,
+
                     nonce:
                         localNonce,
+
                     dropColumn:
-                        String(dropColumn),
+                        String(
+                            dropColumn
+                        ),
+
+                    roundId:
+                        roundId ?? "",
                 });
 
             const response =
@@ -70,7 +90,9 @@ export default function VerifyForm() {
                     `/api/verify?${params}`
                 );
 
-            if (!response.ok) {
+            if (
+                !response.ok
+            ) {
                 throw new Error(
                     "Verification failed"
                 );
@@ -79,7 +101,9 @@ export default function VerifyForm() {
             const data =
                 await response.json();
 
-            setResult(data);
+            setResult(
+                data
+            );
 
         } catch (err) {
 
@@ -91,7 +115,9 @@ export default function VerifyForm() {
 
         } finally {
 
-            setLoading(false);
+            setLoading(
+                false
+            );
 
         }
     }
@@ -121,10 +147,17 @@ export default function VerifyForm() {
                     Verify Round
                 </h2>
 
-                <div className="grid gap-4">
+                <div
+                    className="
+                        grid
+                        gap-4
+                    "
+                >
 
                     <input
-                        value={localServerSeed}
+                        value={
+                            localServerSeed
+                        }
                         onChange={e =>
                             setLocalServerSeed(
                                 e.target.value
@@ -140,7 +173,9 @@ export default function VerifyForm() {
                     />
 
                     <input
-                        value={clientSeed}
+                        value={
+                            clientSeed
+                        }
                         readOnly
                         placeholder="Client Seed"
                         className="
@@ -153,7 +188,9 @@ export default function VerifyForm() {
                     />
 
                     <input
-                        value={localNonce}
+                        value={
+                            localNonce
+                        }
                         onChange={e =>
                             setLocalNonce(
                                 e.target.value
@@ -169,7 +206,9 @@ export default function VerifyForm() {
                     />
 
                     <input
-                        value={dropColumn}
+                        value={
+                            dropColumn
+                        }
                         readOnly
                         className="
                             w-full
@@ -181,7 +220,10 @@ export default function VerifyForm() {
                     />
 
                     <input
-                        value={roundId ?? ""}
+                        value={
+                            roundId ??
+                            ""
+                        }
                         readOnly
                         placeholder="Round ID"
                         className="
@@ -221,75 +263,31 @@ export default function VerifyForm() {
                 </div>
             </div>
 
-            {error && (
-                <div
-                    className="
-                        rounded
-                        border
-                        border-red-500
-                        p-4
-                        text-red-500
-                    "
-                >
-                    {error}
-                </div>
-            )}
-
-            {result && (
-                <div
-                    className="
-                        rounded-xl
-                        border
-                        p-6
-                    "
-                >
-                    <h3
+            {
+                error && (
+                    <div
                         className="
-                            mb-4
-                            text-xl
-                            font-bold
+                            rounded
+                            border
+                            border-red-500
+                            p-4
+                            text-red-500
                         "
                     >
-                        Verification Result
-                    </h3>
-
-                    <div className="space-y-3">
-
-                        <p>
-                            <strong>
-                                Commit Hash:
-                            </strong>
-                            {" "}
-                            {result.commitHex}
-                        </p>
-
-                        <p>
-                            <strong>
-                                Combined Seed:
-                            </strong>
-                            {" "}
-                            {result.combinedSeed}
-                        </p>
-
-                        <p>
-                            <strong>
-                                Peg Map Hash:
-                            </strong>
-                            {" "}
-                            {result.pegMapHash}
-                        </p>
-
-                        <p>
-                            <strong>
-                                Final Bin:
-                            </strong>
-                            {" "}
-                            {result.binIndex}
-                        </p>
-
+                        {error}
                     </div>
-                </div>
-            )}
+                )
+            }
+
+            {
+                result && (
+                    <VerificationResult
+                        result={
+                            result
+                        }
+                    />
+                )
+            }
 
         </div>
     );

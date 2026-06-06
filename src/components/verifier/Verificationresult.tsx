@@ -1,11 +1,16 @@
 "use client";
 
+import PathReplay
+    from "./PathReplay";
+
 interface Props {
     result: {
         commitHex: string;
         combinedSeed: string;
         pegMapHash: string;
         binIndex: number;
+        path: ("L" | "R")[];
+        verified: boolean;
     };
 }
 
@@ -32,7 +37,28 @@ export default function VerificationResult({
                 Verification Result
             </h2>
 
-            <div className="space-y-3">
+            <div
+                className={`
+                    mb-6
+                    rounded-lg
+                    p-4
+                    text-center
+                    text-white
+                    font-bold
+                    ${result.verified
+                        ? "bg-green-500"
+                        : "bg-red-500"
+                    }
+                `}
+            >
+                {
+                    result.verified
+                        ? "✅ VERIFIED"
+                        : "❌ FAILED"
+                }
+            </div>
+
+            <div className="space-y-4">
 
                 <p>
                     <strong>
@@ -67,6 +93,10 @@ export default function VerificationResult({
                 </p>
 
             </div>
+
+            <PathReplay
+                path={result.path}
+            />
         </div>
     );
 }
