@@ -15,6 +15,17 @@ export async function POST(request: Request, { params }: {
             "START BODY",
             body
         );
+
+        if (body && typeof body === "object") {
+            let betCents = Number(body.betCents);
+            if (isNaN(betCents) || betCents < 1) {
+                betCents = 1;
+            } else {
+                betCents = Math.floor(betCents);
+            }
+            body.betCents = betCents;
+        }
+
         const parsed = startRoundSchema.parse(body);
         const { id } = await params;
 

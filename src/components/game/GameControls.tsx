@@ -18,14 +18,19 @@ export default function GameControls() {
         setAnimating,
         setRoundData } = useGameStore();
 
+    const isBetInvalid = isNaN(betAmount) || betAmount < 1;
+
     const handleDrop = async () => {
 
         if (
             !clientSeed.trim() ||
-            isAnimating
+            isAnimating ||
+            isBetInvalid
         ) {
             return;
         }
+
+        const finalBet = isNaN(betAmount) || betAmount < 1 ? 1 : Math.floor(betAmount);
 
         try {
 
@@ -34,6 +39,12 @@ export default function GameControls() {
                 binIndex: null,
                 multiplier: null,
                 pegMapHash: null,
+                serverSeed: null,
+                revealedAt: null,
+                verificationStatus: null,
+                roundId: null,
+                commitHash: null,
+                nonce: null,
             });
 
             const round =
@@ -52,7 +63,7 @@ export default function GameControls() {
                 await startRound(
                     round.roundId,
                     clientSeed,
-                    betAmount,
+                    finalBet,
                     dropColumn
                 );
 
@@ -143,8 +154,18 @@ export default function GameControls() {
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">₹</span>
                         <input
                             type="number"
-                            value={betAmount}
-                            onChange={e => setBetAmount(Number(e.target.value))}
+                            value={isNaN(betAmount) ? "" : betAmount}
+                            onChange={e => {
+                                const val = e.target.value === "" ? NaN : Number(e.target.value);
+                                setBetAmount(val);
+                            }}
+                            onBlur={() => {
+                                if (isNaN(betAmount) || betAmount < 1) {
+                                    setBetAmount(1);
+                                } else {
+                                    setBetAmount(Math.floor(betAmount));
+                                }
+                            }}
                             disabled={isAnimating}
                             placeholder="Bet Amount"
                             className="w-full bg-zinc-950 border border-zinc-800 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 rounded-xl pl-8 pr-4 h-14 text-zinc-100 placeholder-zinc-700 font-semibold transition-all disabled:opacity-60 disabled:cursor-not-allowed outline-none"
@@ -170,7 +191,7 @@ export default function GameControls() {
                 {/* Drop Ball Button */}
                 <button
                     onClick={handleDrop}
-                    disabled={!clientSeed.trim() || isAnimating}
+                    disabled={!clientSeed.trim() || isAnimating || isBetInvalid}
                     className="w-full h-14 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 active:scale-[0.98] text-black font-extrabold text-lg tracking-wide shadow-lg shadow-yellow-500/10 hover:shadow-yellow-500/25 transition-all disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
                 >
                     DROP BALL

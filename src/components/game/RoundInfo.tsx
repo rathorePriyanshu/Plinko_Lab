@@ -114,7 +114,6 @@ export default function RoundInfo() {
                 </div>
             </div>
 
-            {/* Server seed block */}
             {serverSeed && (
                 <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 space-y-2 relative overflow-hidden">
                     <div className="flex justify-between items-center border-b border-emerald-500/10 pb-2">
@@ -133,7 +132,6 @@ export default function RoundInfo() {
                 </div>
             )}
 
-            {/* Action buttons */}
             <div className="grid grid-cols-2 gap-3 pt-1">
                 <RevealButton />
                 <OpenVerifierButton />
