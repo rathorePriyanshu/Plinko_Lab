@@ -1,11 +1,8 @@
 "use client";
 
 import { useState } from "react";
-
-import {
-    useGameStore,
-} from "@/store/game-store";
-
+import { useSearchParams } from "next/navigation";
+import { useGameStore } from "@/store/game-store";
 import VerificationResult from "./Verificationresult";
 
 interface VerifyResult {
@@ -18,277 +15,172 @@ interface VerifyResult {
 }
 
 export default function VerifyForm() {
+    const searchParams = useSearchParams();
+    const store = useGameStore();
 
-    const {
-        clientSeed,
-        dropColumn,
-        roundId,
-        serverSeed,
-        nonce,
-    } = useGameStore();
+    const queryServerSeed = searchParams.get("serverSeed");
+    const queryClientSeed = searchParams.get("clientSeed");
+    const queryNonce = searchParams.get("nonce");
+    const queryDropColumn = searchParams.get("dropColumn");
+    const queryRoundId = searchParams.get("roundId");
 
-    const [
-        localServerSeed,
-        setLocalServerSeed,
-    ] = useState(
-        serverSeed ?? ""
-    );
+    const [localServerSeed, setLocalServerSeed] = useState(queryServerSeed ?? store.serverSeed ?? "");
+    const [localNonce, setLocalNonce] = useState(queryNonce ?? store.nonce ?? "");
+    const [localClientSeed] = useState(queryClientSeed ?? store.clientSeed ?? "");
+    const [localDropColumn] = useState(queryDropColumn ? Number(queryDropColumn) : store.dropColumn);
+    const [localRoundId] = useState(queryRoundId ?? store.roundId ?? "");
 
-    const [
-        localNonce,
-        setLocalNonce,
-    ] = useState(
-        nonce ?? ""
-    );
-
-    const [
-        result,
-        setResult,
-    ] = useState<VerifyResult | null>(
-        null
-    );
-
-    const [
-        loading,
-        setLoading,
-    ] = useState(false);
-
-    const [
-        error,
-        setError,
-    ] = useState("");
+    const [result, setResult] = useState<VerifyResult | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     async function handleVerify() {
-
         try {
-
             setLoading(true);
-
             setError("");
 
-            const params =
-                new URLSearchParams({
-                    serverSeed:
-                        localServerSeed,
+            const params = new URLSearchParams({
+                serverSeed: localServerSeed,
+                clientSeed: localClientSeed,
+                nonce: localNonce,
+                dropColumn: String(localDropColumn),
+                roundId: localRoundId,
+            });
 
-                    clientSeed,
+            const response = await fetch(`/api/verify?${params}`);
 
-                    nonce:
-                        localNonce,
-
-                    dropColumn:
-                        String(
-                            dropColumn
-                        ),
-
-                    roundId:
-                        roundId ?? "",
-                });
-
-            const response =
-                await fetch(
-                    `/api/verify?${params}`
-                );
-
-            if (
-                !response.ok
-            ) {
-                throw new Error(
-                    "Verification failed"
-                );
+            if (!response.ok) {
+                throw new Error("Verification failed");
             }
 
-            const data =
-                await response.json();
-
-            setResult(
-                data
-            );
-
+            const data = await response.json();
+            setResult(data);
         } catch (err) {
-
             setError(
                 err instanceof Error
                     ? err.message
                     : "Something went wrong"
             );
-
         } finally {
-
-            setLoading(
-                false
-            );
-
+            setLoading(false);
         }
     }
 
     return (
-        <div
-            className="
-                mx-auto
-                max-w-4xl
-                space-y-6
-            "
-        >
-            <div
-                className="
-                    rounded-xl
-                    border
-                    p-6
-                "
-            >
-                <h2
-                    className="
-                        mb-6
-                        text-3xl
-                        font-bold
-                    "
-                >
-                    Verify Round
-                </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
+            {/* Left Column: Form Card */}
+            <div className="bg-zinc-900/40 backdrop-blur-md border border-zinc-800 rounded-2xl p-5 md:p-6 shadow-xl space-y-6">
+                <div>
+                    <h2 className="text-xl font-bold tracking-tight text-zinc-100">
+                        Verification Input
+                    </h2>
+                    <p className="text-xs text-zinc-400 mt-1">
+                        Enter the round parameters below to execute the physics calculation engine and compare outcomes.
+                    </p>
+                </div>
 
-                <div
-                    className="
-                        grid
-                        gap-4
-                    "
-                >
+                <div className="space-y-4">
+                    {/* Server Seed */}
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block">
+                            Server Seed
+                        </label>
+                        <input
+                            value={localServerSeed}
+                            onChange={e => setLocalServerSeed(e.target.value)}
+                            placeholder="Server Seed (HEX)"
+                            className="w-full bg-zinc-950 border border-zinc-800 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 rounded-xl px-4 h-14 text-zinc-100 placeholder-zinc-700 font-semibold transition-all outline-none"
+                        />
+                        <span className="text-[10px] text-zinc-500 block">The cryptographically secure seed generated by the server.</span>
+                    </div>
 
-                    <input
-                        value={
-                            localServerSeed
-                        }
-                        onChange={e =>
-                            setLocalServerSeed(
-                                e.target.value
-                            )
-                        }
-                        placeholder="Server Seed"
-                        className="
-                            w-full
-                            rounded
-                            border
-                            p-3
-                        "
-                    />
+                    {/* Client Seed */}
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block">
+                            Client Seed
+                        </label>
+                        <input
+                            value={localClientSeed}
+                            readOnly
+                            placeholder="Client Seed"
+                            className="w-full bg-zinc-950/40 border border-zinc-800/60 rounded-xl px-4 h-14 text-zinc-450 font-semibold cursor-not-allowed outline-none select-all font-mono"
+                        />
+                        <span className="text-[10px] text-zinc-500 block">The player-controlled seed used to introduce randomness into the path.</span>
+                    </div>
 
-                    <input
-                        value={
-                            clientSeed
-                        }
-                        readOnly
-                        placeholder="Client Seed"
-                        className="
-                            w-full
-                            rounded
-                            border
-                            p-3
-                            bg-gray-100
-                        "
-                    />
+                    {/* Nonce */}
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block">
+                            Nonce
+                        </label>
+                        <input
+                            value={localNonce}
+                            onChange={e => setLocalNonce(e.target.value)}
+                            placeholder="Nonce"
+                            className="w-full bg-zinc-950 border border-zinc-800 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 rounded-xl px-4 h-14 text-zinc-100 placeholder-zinc-700 font-semibold transition-all outline-none"
+                        />
+                        <span className="text-[10px] text-zinc-500 block">The sequential play count associated with this seed combination.</span>
+                    </div>
 
-                    <input
-                        value={
-                            localNonce
-                        }
-                        onChange={e =>
-                            setLocalNonce(
-                                e.target.value
-                            )
-                        }
-                        placeholder="Nonce"
-                        className="
-                            w-full
-                            rounded
-                            border
-                            p-3
-                        "
-                    />
+                    {/* Drop Column */}
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block">
+                            Drop Column
+                        </label>
+                        <input
+                            value={localDropColumn}
+                            readOnly
+                            className="w-full bg-zinc-950/40 border border-zinc-800/60 rounded-xl px-4 h-14 text-zinc-450 font-semibold cursor-not-allowed outline-none select-all font-mono"
+                        />
+                        <span className="text-[10px] text-zinc-500 block">The starting grid index where the Plinko ball was dropped.</span>
+                    </div>
 
-                    <input
-                        value={
-                            dropColumn
-                        }
-                        readOnly
-                        className="
-                            w-full
-                            rounded
-                            border
-                            p-3
-                            bg-gray-100
-                        "
-                    />
+                    {/* Round ID */}
+                    <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider block">
+                            Round ID
+                        </label>
+                        <input
+                            value={localRoundId}
+                            readOnly
+                            placeholder="Round ID"
+                            className="w-full bg-zinc-950/40 border border-zinc-800/60 rounded-xl px-4 h-14 text-zinc-450 font-semibold cursor-not-allowed outline-none select-all font-mono text-xs"
+                        />
+                        <span className="text-[10px] text-zinc-500 block">The unique round identifier inside the database ledger.</span>
+                    </div>
 
-                    <input
-                        value={
-                            roundId ??
-                            ""
-                        }
-                        readOnly
-                        placeholder="Round ID"
-                        className="
-                            w-full
-                            rounded
-                            border
-                            p-3
-                            bg-gray-100
-                        "
-                    />
+                    {/* Error container */}
+                    {error && (
+                        <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4 text-xs font-semibold text-red-400">
+                            {error}
+                        </div>
+                    )}
 
+                    {/* Verify button */}
                     <button
-                        onClick={
-                            handleVerify
-                        }
-                        disabled={
-                            loading ||
-                            !localServerSeed ||
-                            !localNonce
-                        }
-                        className="
-                            rounded
-                            bg-yellow-500
-                            px-4
-                            py-3
-                            font-semibold
-                            disabled:opacity-50
-                        "
+                        onClick={handleVerify}
+                        disabled={loading || !localServerSeed || !localNonce}
+                        className="w-full h-14 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 active:scale-[0.98] text-black font-extrabold text-lg tracking-wide shadow-lg shadow-yellow-500/10 hover:shadow-yellow-500/25 transition-all disabled:opacity-50 disabled:pointer-events-none cursor-pointer flex items-center justify-center"
                     >
-                        {
-                            loading
-                                ? "Verifying..."
-                                : "Verify Round"
-                        }
+                        {loading ? "Verifying..." : "Verify Round"}
                     </button>
-
                 </div>
             </div>
 
-            {
-                error && (
-                    <div
-                        className="
-                            rounded
-                            border
-                            border-red-500
-                            p-4
-                            text-red-500
-                        "
-                    >
-                        {error}
+            {/* Right Column: Verification Result Card */}
+            <div className="space-y-6">
+                {result ? (
+                    <VerificationResult result={result} />
+                ) : (
+                    <div className="hidden lg:flex flex-col items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900/10 p-12 text-center h-[600px] border-dashed">
+                        <span className="text-4xl mb-3 opacity-60">🔍</span>
+                        <h3 className="text-sm font-bold text-zinc-400">Awaiting Verification</h3>
+                        <p className="text-xs text-zinc-555 max-w-xs mt-1 leading-relaxed">
+                            Fill in the server seed and nonce parameters on the left and run verification to display cryptographic results.
+                        </p>
                     </div>
-                )
-            }
-
-            {
-                result && (
-                    <VerificationResult
-                        result={
-                            result
-                        }
-                    />
-                )
-            }
-
+                )}
+            </div>
         </div>
     );
 }
