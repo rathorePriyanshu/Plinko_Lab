@@ -14,6 +14,8 @@ interface GameStore {
     isMuted: boolean;
     serverSeed: string | null;
     nonce: string | null;
+    revealedAt: string | null;
+    verificationStatus: boolean | null;
 
     setMuted: (value: boolean) => void;
     setDropColumn: (value: number) => void;
@@ -38,7 +40,8 @@ export const useGameStore = create<GameStore>(
         isMuted: false,
         serverSeed: null,
         nonce: null,
-
+        revealedAt: null,
+        verificationStatus: null,
 
         setMuted: value => set({ isMuted: value }),
         setDropColumn: value => set({ dropColumn: value }),

@@ -49,3 +49,17 @@ export async function startRound(
 
     return response.json();
 }
+
+export async function revealRound(
+    roundId: string
+) {
+    const response =
+        await fetch(
+            `/api/rounds/${roundId}/reveal`,
+            {
+                method: "POST",
+            }
+        );
+
+    return response.json();
+}

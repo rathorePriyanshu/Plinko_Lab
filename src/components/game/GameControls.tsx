@@ -42,6 +42,7 @@ export default function GameControls() {
 
                 commitHash:
                     round.commitHex,
+                nonce: round.nonce,
             });
 
             const result =
