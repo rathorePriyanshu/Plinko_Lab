@@ -8,7 +8,13 @@ export async function POST(request: Request, { params }: {
 }
 ) {
     try {
-        const body = await request.json();
+        const body =
+            await request.json();
+
+        console.log(
+            "START BODY",
+            body
+        );
         const parsed = startRoundSchema.parse(body);
         const { id } = await params;
 

@@ -70,6 +70,8 @@ export async function startRound(
             round.nonce
         );
 
+
+
     const engineResult =
         runPlinkoEngine(
             combinedSeed,
@@ -100,12 +102,15 @@ export async function startRound(
             },
         });
 
+    const path = JSON.parse(updatedRound.pathJson!) as ("L" | "R")[];
+
     return {
         roundId: updatedRound.id,
         pegMapHash: engineResult.pegMapHash,
         rows: updatedRound.rows,
         binIndex: engineResult.binIndex,
         payoutMultiplier,
+        path
     };
 }
 

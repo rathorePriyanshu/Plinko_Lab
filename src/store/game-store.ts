@@ -8,6 +8,8 @@ interface GameStore {
     commitHash: string | null;
     pegMapHash: string | null;
     binIndex: number | null;
+    multiplier: number | null;
+    path: ("L" | "R")[];
     isAnimating: boolean;
 
     setDropColumn: (value: number) => void;
@@ -27,6 +29,8 @@ export const useGameStore = create<GameStore>(
         pegMapHash: null,
         binIndex: null,
         isAnimating: false,
+        multiplier: null,
+        path: [],
 
         setDropColumn: value => set({ dropColumn: value }),
         setBetAmount: value => set({ betAmount: value }),
