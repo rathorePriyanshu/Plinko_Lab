@@ -16,17 +16,34 @@ import {
     useGameStore,
 } from "@/store/game-store";
 
-export default function AnimatedBall() {
+interface Props {
+    onPegHit?: (
+        row: number
+    ) => void;
 
-    const {
-        path,
-        isAnimating,
-        setAnimating,
-    } = useGameStore();
+    onFinish?: () => void;
+}
 
-    const [step, setStep] =
-        useState(0);
+export default function AnimatedBall({
+    onPegHit,
+    onFinish,
+}: Props) {
 
+
+    const path =
+        useGameStore(
+            state => state.path
+        );
+
+    const isAnimating =
+        useGameStore(
+            state => state.isAnimating
+        );
+
+    const setAnimating =
+        useGameStore(
+            state => state.setAnimating
+        );
     const coordinates =
         useMemo(
             () =>
@@ -35,6 +52,11 @@ export default function AnimatedBall() {
                 ),
             [path]
         );
+
+    const [
+        currentIndex,
+        setCurrentIndex,
+    ] = useState(0);
 
     useEffect(() => {
 
@@ -45,17 +67,17 @@ export default function AnimatedBall() {
             return;
         }
 
-        setStep(0);
+        setCurrentIndex(0);
 
-        let current = 0;
+        let index = 0;
 
         const interval =
             setInterval(() => {
 
-                current++;
+                index++;
 
                 if (
-                    current >=
+                    index >=
                     coordinates.length
                 ) {
 
@@ -63,18 +85,28 @@ export default function AnimatedBall() {
                         interval
                     );
 
+                    setCurrentIndex(
+                        coordinates.length - 1
+                    );
+
                     setAnimating(
                         false
                     );
 
+                    onFinish?.();
+
                     return;
                 }
 
-                setStep(
-                    current
+                onPegHit?.(
+                    index
                 );
 
-            }, 200);
+                setCurrentIndex(
+                    index
+                );
+
+            }, 180);
 
         return () =>
             clearInterval(
@@ -82,15 +114,17 @@ export default function AnimatedBall() {
             );
 
     }, [
-        isAnimating,
         coordinates,
+        isAnimating,
+        onPegHit,
+        onFinish,
         setAnimating,
     ]);
 
     const point =
         coordinates[
         Math.min(
-            step,
+            currentIndex,
             coordinates.length - 1
         )
         ];
@@ -104,7 +138,9 @@ export default function AnimatedBall() {
             x={
                 point.x + 350
             }
-            y={point.y}
+            y={
+                point.y
+            }
         />
     );
 }

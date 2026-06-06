@@ -7,16 +7,24 @@ import Bin from "./Bin";
 import AnimatedBall from "./AnimatedBall";
 
 import { PAYOUTS } from "@/constants/payouts";
-
 import {
     generatePegPositions,
     ROWS,
     V_SPACING,
+    H_SPACING,
 } from "@/lib/plinko/board-layout";
-
 import {
     useGameStore,
 } from "@/store/game-store";
+
+import {
+    playPegSound,
+    playWinSound,
+} from "@/lib/sound/sound-manage";
+
+import {
+    fireConfetti,
+} from "@/lib/confetti/confetti";
 
 export default function PlinkoBoard() {
 
@@ -25,9 +33,19 @@ export default function PlinkoBoard() {
         []
     );
 
-    const dropColumn =
+    const multiplier =
         useGameStore(
-            state => state.dropColumn
+            state => state.multiplier
+        );
+
+    const path =
+        useGameStore(
+            state => state.path
+        );
+
+    const binIndex =
+        useGameStore(
+            state => state.binIndex
         );
 
     const BOARD_WIDTH = 700;
@@ -55,7 +73,25 @@ export default function PlinkoBoard() {
                         height: BOARD_HEIGHT,
                     }}
                 >
-                    <AnimatedBall />
+
+                    {path.length > 0 && (
+                        <AnimatedBall
+                            onPegHit={() => {
+                                playPegSound();
+                            }}
+                            onFinish={() => {
+
+                                playWinSound();
+
+                                if (
+                                    multiplier &&
+                                    multiplier > 1
+                                ) {
+                                    fireConfetti();
+                                }
+                            }}
+                        />
+                    )}
 
                     {pegs.map(
                         (
@@ -72,32 +108,42 @@ export default function PlinkoBoard() {
                             />
                         )
                     )}
+
                 </div>
 
                 <div
-                    className="
-                        mt-4
-                        flex
-                        justify-center
-                        gap-2
-                    "
+                    className="relative mt-4"
+                    style={{
+                        width: BOARD_WIDTH,
+                        height: 80,
+                    }}
                 >
                     {PAYOUTS.map(
                         (
-                            multiplier,
+                            payout,
                             index
                         ) => (
-                            <Bin
+                            <div
                                 key={index}
-                                index={index}
-                                multiplier={
-                                    multiplier
-                                }
-                                selected={
-                                    dropColumn ===
-                                    index
-                                }
-                            />
+                                className="
+                    absolute
+                    -translate-x-1/2
+                "
+                                style={{
+                                    left:
+                                        BOARD_CENTER +
+                                        (index - 6) *
+                                        H_SPACING,
+                                }}
+                            >
+                                <Bin
+                                    index={index}
+                                    multiplier={payout}
+                                    selected={
+                                        binIndex === index
+                                    }
+                                />
+                            </div>
                         )
                     )}
                 </div>

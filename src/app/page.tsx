@@ -1,5 +1,6 @@
 import GameControls from "@/components/game/GameControls";
 import KeyboardControls from "@/components/game/KeyboardControls";
+import MuteButton from "@/components/game/MuteButton";
 import PayTable from "@/components/game/PayTable";
 import Plinkoboard from "@/components/game/Plinkboard";
 import RoundInfo from "@/components/game/RoundInfo";
@@ -25,6 +26,16 @@ export default function Home() {
       </h1>
 
       <GameControls />
+
+      <div
+        className="
+    flex
+    justify-end
+    mb-4
+  "
+      >
+        <MuteButton />
+      </div>
 
       <Plinkoboard />
 

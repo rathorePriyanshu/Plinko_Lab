@@ -11,7 +11,9 @@ interface GameStore {
     multiplier: number | null;
     path: ("L" | "R")[];
     isAnimating: boolean;
+    isMuted: boolean;
 
+    setMuted: (value: boolean) => void;
     setDropColumn: (value: number) => void;
     setBetAmount: (value: number) => void;
     setClientSeed: (value: string) => void;
@@ -31,7 +33,9 @@ export const useGameStore = create<GameStore>(
         isAnimating: false,
         multiplier: null,
         path: [],
+        isMuted: false,
 
+        setMuted: value => set({ isMuted: value }),
         setDropColumn: value => set({ dropColumn: value }),
         setBetAmount: value => set({ betAmount: value }),
         setClientSeed: value => set({ clientSeed: value }),

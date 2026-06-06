@@ -2,9 +2,6 @@ import {
     H_SPACING,
     V_SPACING,
 } from "./board-layout";
-import {
-    ROWS,
-} from "./board-layout";
 
 export interface Point {
     x: number;
@@ -45,11 +42,6 @@ export function pathToCoordinates(
             });
         }
     );
-
-    points.push({
-        x,
-        y: (ROWS + 1) * V_SPACING,
-    });
 
     return points;
 }

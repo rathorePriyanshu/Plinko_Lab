@@ -16,27 +16,42 @@ export default function GameControls() {
         setRoundData } = useGameStore();
 
     const handleDrop = async () => {
+
+        if (
+            !clientSeed.trim() ||
+            isAnimating
+        ) {
+            return;
+        }
+
         try {
-            setAnimating(true);
-            const round = await createRound();
 
             setRoundData({
-                roundId: round.roundId,
-                commitHash: round.commitHex,
+                path: [],
+                binIndex: null,
+                multiplier: null,
+                pegMapHash: null,
             });
 
-            if (!clientSeed.trim()) {
-                return;
-            }
+            const round =
+                await createRound();
 
-            const result = await startRound(
-                round.roundId,
-                clientSeed,
-                betAmount,
-                dropColumn
-            );
+            setRoundData({
+                roundId:
+                    round.roundId,
 
-            console.log(result.path);
+                commitHash:
+                    round.commitHex,
+            });
+
+            const result =
+                await startRound(
+                    round.roundId,
+                    clientSeed,
+                    betAmount,
+                    dropColumn
+                );
+
             console.log(
                 "PATH",
                 result.path
@@ -53,14 +68,26 @@ export default function GameControls() {
             );
 
             setRoundData({
-                pegMapHash: result.pegMapHash,
-                binIndex: result.binIndex,
-                multiplier: result.payoutMultiplier,
-                path: result.path,
+                pegMapHash:
+                    result.pegMapHash,
+
+                binIndex:
+                    result.binIndex,
+
+                multiplier:
+                    result.payoutMultiplier,
+
+                path:
+                    result.path,
                 isAnimating: true
             });
+
+            setAnimating(true);
+
         } catch (error) {
+
             console.error(error);
+
             setAnimating(false);
         }
     };
