@@ -16,7 +16,9 @@ interface GameStore {
     nonce: string | null;
     revealedAt: string | null;
     verificationStatus: boolean | null;
+    isTilted: boolean;
 
+    toggleTilt: () => void;
     setMuted: (value: boolean) => void;
     setDropColumn: (value: number) => void;
     setBetAmount: (value: number) => void;
@@ -42,7 +44,9 @@ export const useGameStore = create<GameStore>(
         nonce: null,
         revealedAt: null,
         verificationStatus: null,
+        isTilted: false,
 
+        toggleTilt: () => set(state => ({ isTilted: !state.isTilted, })),
         setMuted: value => set({ isMuted: value }),
         setDropColumn: value => set({ dropColumn: value }),
         setBetAmount: value => set({ betAmount: value }),

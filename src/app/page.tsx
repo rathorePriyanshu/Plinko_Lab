@@ -4,6 +4,7 @@ import MuteButton from "@/components/game/MuteButton";
 import PayTable from "@/components/game/PayTable";
 import Plinkoboard from "@/components/game/Plinkboard";
 import RoundInfo from "@/components/game/RoundInfo";
+import TiltListener from "@/components/game/Tiltlistener";
 
 export default function Home() {
   return (
@@ -26,6 +27,8 @@ export default function Home() {
       </h1>
 
       <GameControls />
+
+      <TiltListener />
 
       <div
         className="

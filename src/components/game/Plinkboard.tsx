@@ -13,6 +13,7 @@ import {
     V_SPACING,
     H_SPACING,
 } from "@/lib/plinko/board-layout";
+
 import {
     useGameStore,
 } from "@/store/game-store";
@@ -23,7 +24,6 @@ import {
 } from "@/lib/sound/sound-manage";
 
 import {
-    canAnimate,
     fireConfetti,
 } from "@/lib/confetti/confetti";
 
@@ -49,6 +49,11 @@ export default function PlinkoBoard() {
             state => state.binIndex
         );
 
+    const isTilted =
+        useGameStore(
+            state => state.isTilted
+        );
+
     const BOARD_WIDTH = 700;
 
     const BOARD_HEIGHT =
@@ -61,11 +66,47 @@ export default function PlinkoBoard() {
         <div className="overflow-x-auto">
 
             <div
-                className="mx-auto"
+                className={`
+                    mx-auto
+                    transition-all
+                    duration-500
+                    ease-in-out
+                    ${isTilted
+                        ? `
+                                rotate-[5deg]
+                                sepia
+                                saturate-150
+                                contrast-125
+                                brightness-95
+                              `
+                        : ""
+                    }
+                `}
                 style={{
                     width: BOARD_WIDTH,
                 }}
             >
+
+                {isTilted && (
+                    <div
+                        className="
+                            absolute
+                            right-4
+                            top-4
+                            z-50
+                            rounded
+                            bg-yellow-500
+                            px-3
+                            py-2
+                            text-sm
+                            font-bold
+                            text-black
+                            shadow-lg
+                        "
+                    >
+                        TILT MODE
+                    </div>
+                )}
 
                 <div
                     className="relative"
@@ -88,9 +129,7 @@ export default function PlinkoBoard() {
                                     multiplier &&
                                     multiplier > 1
                                 ) {
-                                    if (canAnimate()) {
-                                        fireConfetti();
-                                    }
+                                    fireConfetti();
                                 }
                             }}
                         />
@@ -129,9 +168,9 @@ export default function PlinkoBoard() {
                             <div
                                 key={index}
                                 className="
-                    absolute
-                    -translate-x-1/2
-                "
+                                    absolute
+                                    -translate-x-1/2
+                                "
                                 style={{
                                     left:
                                         BOARD_CENTER +
